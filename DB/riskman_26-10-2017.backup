@@ -1,0 +1,3396 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.6.2
+-- Dumped by pg_dump version 9.6.2
+
+-- Started on 2017-10-27 16:51:47
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 1 (class 3079 OID 12387)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2507 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 210 (class 1259 OID 21614)
+-- Name: activities; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE activities (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description character varying(255),
+    e_number character varying(255) NOT NULL
+);
+
+
+ALTER TABLE activities OWNER TO riskman;
+
+--
+-- TOC entry 2508 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: TABLE activities; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE activities IS 'Виды банковской деятельности';
+
+
+--
+-- TOC entry 209 (class 1259 OID 21612)
+-- Name: activities_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE activities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE activities_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2509 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: activities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE activities_id_seq OWNED BY activities.id;
+
+
+--
+-- TOC entry 185 (class 1259 OID 21159)
+-- Name: buildings; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE buildings (
+    id smallint NOT NULL,
+    name character varying(255),
+    id_address integer
+);
+
+
+ALTER TABLE buildings OWNER TO riskman;
+
+--
+-- TOC entry 186 (class 1259 OID 21165)
+-- Name: building_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE building_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE building_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2510 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: building_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE building_id_seq OWNED BY buildings.id;
+
+
+--
+-- TOC entry 187 (class 1259 OID 21167)
+-- Name: business_process; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE business_process (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description character varying(255),
+    number character varying(255),
+    parent_process_id integer
+);
+
+
+ALTER TABLE business_process OWNER TO riskman;
+
+--
+-- TOC entry 188 (class 1259 OID 21173)
+-- Name: business_process_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE business_process_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE business_process_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2511 (class 0 OID 0)
+-- Dependencies: 188
+-- Name: business_process_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE business_process_id_seq OWNED BY business_process.id;
+
+
+--
+-- TOC entry 189 (class 1259 OID 21175)
+-- Name: divisions; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE divisions (
+    id integer NOT NULL,
+    name character varying(255),
+    parent_div_id integer,
+    external_id character varying,
+    date_add date,
+    date_remove date
+);
+
+
+ALTER TABLE divisions OWNER TO riskman;
+
+--
+-- TOC entry 2512 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: TABLE divisions; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE divisions IS 'Подразделения';
+
+
+--
+-- TOC entry 2513 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: COLUMN divisions.external_id; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN divisions.external_id IS 'Id из внешней системы';
+
+
+--
+-- TOC entry 2514 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: COLUMN divisions.date_add; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN divisions.date_add IS 'Дата добавления';
+
+
+--
+-- TOC entry 2515 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: COLUMN divisions.date_remove; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN divisions.date_remove IS 'дата исключения';
+
+
+--
+-- TOC entry 190 (class 1259 OID 21181)
+-- Name: division_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE division_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE division_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2516 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: division_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE division_id_seq OWNED BY divisions.id;
+
+
+--
+-- TOC entry 191 (class 1259 OID 21183)
+-- Name: emails; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE emails (
+    id integer NOT NULL,
+    id_employee integer NOT NULL,
+    email character varying(255)
+);
+
+
+ALTER TABLE emails OWNER TO riskman;
+
+--
+-- TOC entry 192 (class 1259 OID 21186)
+-- Name: emails_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE emails_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE emails_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2517 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: emails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE emails_id_seq OWNED BY emails.id;
+
+
+--
+-- TOC entry 193 (class 1259 OID 21188)
+-- Name: employee_appointment; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE employee_appointment (
+    id_employee integer NOT NULL,
+    id_division integer NOT NULL,
+    id_position integer NOT NULL,
+    date_app date NOT NULL,
+    app_order character varying(255)
+);
+
+
+ALTER TABLE employee_appointment OWNER TO riskman;
+
+--
+-- TOC entry 2518 (class 0 OID 0)
+-- Dependencies: 193
+-- Name: COLUMN employee_appointment.date_app; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN employee_appointment.date_app IS 'Дата назначения сотрудника на должность';
+
+
+--
+-- TOC entry 195 (class 1259 OID 21198)
+-- Name: employees_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE employees_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE employees_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 194 (class 1259 OID 21191)
+-- Name: employees; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE employees (
+    id integer DEFAULT nextval('employees_id_seq'::regclass) NOT NULL,
+    name character varying(255),
+    mid_name character varying(255),
+    surname character varying(255),
+    description character varying(255),
+    is_work boolean DEFAULT true NOT NULL,
+    date_dismiss date,
+    external_id character varying(255),
+    tab_num character varying(255)
+);
+
+
+ALTER TABLE employees OWNER TO riskman;
+
+--
+-- TOC entry 2519 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: TABLE employees; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE employees IS 'Сотрудники';
+
+
+--
+-- TOC entry 2520 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: COLUMN employees.is_work; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN employees.is_work IS 'Еще работает';
+
+
+--
+-- TOC entry 2521 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: COLUMN employees.date_dismiss; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN employees.date_dismiss IS 'Дата увольнения';
+
+
+--
+-- TOC entry 2522 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: COLUMN employees.tab_num; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN employees.tab_num IS 'Табельный номер';
+
+
+--
+-- TOC entry 208 (class 1259 OID 21452)
+-- Name: factor_examples; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE factor_examples (
+    id integer NOT NULL,
+    id_sub_factor integer NOT NULL,
+    description text
+);
+
+
+ALTER TABLE factor_examples OWNER TO riskman;
+
+--
+-- TOC entry 2523 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: TABLE factor_examples; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE factor_examples IS 'Примеры факторов опер. рисков';
+
+
+--
+-- TOC entry 207 (class 1259 OID 21450)
+-- Name: factor_examples_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE factor_examples_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE factor_examples_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2524 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: factor_examples_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE factor_examples_id_seq OWNED BY factor_examples.id;
+
+
+--
+-- TOC entry 204 (class 1259 OID 21412)
+-- Name: factors; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE factors (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description text,
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE factors OWNER TO riskman;
+
+--
+-- TOC entry 2525 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: TABLE factors; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE factors IS 'Факторы опер. рисков';
+
+
+--
+-- TOC entry 203 (class 1259 OID 21410)
+-- Name: factors_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE factors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE factors_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2526 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: factors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE factors_id_seq OWNED BY factors.id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 21724)
+-- Name: loss_rank_values; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE loss_rank_values (
+    id_rank integer NOT NULL,
+    value numeric(10,2) NOT NULL,
+    value_type smallint NOT NULL,
+    date_set date NOT NULL,
+    date_end date,
+    description character varying(255)
+);
+
+
+ALTER TABLE loss_rank_values OWNER TO riskman;
+
+--
+-- TOC entry 2527 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: TABLE loss_rank_values; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE loss_rank_values IS 'Значения уровней потерь';
+
+
+--
+-- TOC entry 2528 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: COLUMN loss_rank_values.value_type; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN loss_rank_values.value_type IS 'Тип значения: сигнальные, пороговые, ...';
+
+
+--
+-- TOC entry 214 (class 1259 OID 21713)
+-- Name: loss_ranks; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE loss_ranks (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description character varying(255),
+    e_number character varying(255) NOT NULL
+);
+
+
+ALTER TABLE loss_ranks OWNER TO riskman;
+
+--
+-- TOC entry 2529 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: TABLE loss_ranks; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE loss_ranks IS 'Уровень потерь';
+
+
+--
+-- TOC entry 213 (class 1259 OID 21711)
+-- Name: loss_ranks_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE loss_ranks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE loss_ranks_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2530 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: loss_ranks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE loss_ranks_id_seq OWNED BY loss_ranks.id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 21772)
+-- Name: loss_sub_types; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE loss_sub_types (
+    id integer NOT NULL,
+    id_loss integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description character varying(255),
+    e_number character varying(255) NOT NULL
+);
+
+
+ALTER TABLE loss_sub_types OWNER TO riskman;
+
+--
+-- TOC entry 2531 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: TABLE loss_sub_types; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE loss_sub_types IS 'Подвиды потерь';
+
+
+--
+-- TOC entry 218 (class 1259 OID 21770)
+-- Name: loss_sub_types_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE loss_sub_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE loss_sub_types_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2532 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: loss_sub_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE loss_sub_types_id_seq OWNED BY loss_sub_types.id;
+
+
+--
+-- TOC entry 212 (class 1259 OID 21644)
+-- Name: loss_types; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE loss_types (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description character varying(255),
+    e_number character varying(255) NOT NULL
+);
+
+
+ALTER TABLE loss_types OWNER TO riskman;
+
+--
+-- TOC entry 2533 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: TABLE loss_types; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE loss_types IS 'Типы потерь';
+
+
+--
+-- TOC entry 211 (class 1259 OID 21642)
+-- Name: loss_types_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE loss_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE loss_types_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2534 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: loss_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE loss_types_id_seq OWNED BY loss_types.id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 21791)
+-- Name: phones; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE phones (
+    id integer NOT NULL,
+    id_employee integer NOT NULL,
+    tel character varying(255)
+);
+
+
+ALTER TABLE phones OWNER TO riskman;
+
+--
+-- TOC entry 2535 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: TABLE phones; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE phones IS 'Телефоны сотрудников';
+
+
+--
+-- TOC entry 220 (class 1259 OID 21789)
+-- Name: phones_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE phones_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE phones_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2536 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: phones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE phones_id_seq OWNED BY phones.id;
+
+
+--
+-- TOC entry 196 (class 1259 OID 21202)
+-- Name: positions; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE positions (
+    id integer NOT NULL,
+    name character varying,
+    is_executive boolean,
+    external_id character varying(255),
+    date_add date,
+    date_remove date
+);
+
+
+ALTER TABLE positions OWNER TO riskman;
+
+--
+-- TOC entry 2537 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: TABLE positions; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE positions IS 'Должности';
+
+
+--
+-- TOC entry 2538 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: COLUMN positions.is_executive; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN positions.is_executive IS 'Начальник';
+
+
+--
+-- TOC entry 2539 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: COLUMN positions.date_add; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN positions.date_add IS 'Дата появления должности';
+
+
+--
+-- TOC entry 2540 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: COLUMN positions.date_remove; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN positions.date_remove IS 'Дата сокращения должности';
+
+
+--
+-- TOC entry 197 (class 1259 OID 21208)
+-- Name: positions_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE positions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE positions_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2541 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: positions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE positions_id_seq OWNED BY positions.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 21897)
+-- Name: r_events_activities; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE r_events_activities (
+    id_event integer NOT NULL,
+    id_sub_activity integer NOT NULL,
+    reason character varying(126)
+);
+
+
+ALTER TABLE r_events_activities OWNER TO riskman;
+
+--
+-- TOC entry 2542 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: COLUMN r_events_activities.reason; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN r_events_activities.reason IS 'Основание';
+
+
+--
+-- TOC entry 224 (class 1259 OID 21844)
+-- Name: r_events_factors; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE r_events_factors (
+    id_event integer NOT NULL,
+    id_sub_factor integer NOT NULL,
+    reason character varying(126)
+);
+
+
+ALTER TABLE r_events_factors OWNER TO riskman;
+
+--
+-- TOC entry 2543 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: COLUMN r_events_factors.reason; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN r_events_factors.reason IS 'Основание';
+
+
+--
+-- TOC entry 239 (class 1259 OID 22189)
+-- Name: r_events_losses; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE r_events_losses (
+    id_event integer NOT NULL,
+    id_loss_sub_type integer NOT NULL,
+    loss_description text
+);
+
+
+ALTER TABLE r_events_losses OWNER TO riskman;
+
+--
+-- TOC entry 2544 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: COLUMN r_events_losses.loss_description; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN r_events_losses.loss_description IS 'Описание потерь';
+
+
+--
+-- TOC entry 234 (class 1259 OID 21970)
+-- Name: r_events_risk_event_types; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE r_events_risk_event_types (
+    id_event integer NOT NULL,
+    id_event_sub_type integer NOT NULL,
+    reason character varying(126)
+);
+
+
+ALTER TABLE r_events_risk_event_types OWNER TO riskman;
+
+--
+-- TOC entry 2545 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: COLUMN r_events_risk_event_types.reason; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN r_events_risk_event_types.reason IS 'Основание';
+
+
+--
+-- TOC entry 202 (class 1259 OID 21382)
+-- Name: r_user_roles; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE r_user_roles (
+    id_user integer NOT NULL,
+    id_role integer NOT NULL
+);
+
+
+ALTER TABLE r_user_roles OWNER TO riskman;
+
+--
+-- TOC entry 231 (class 1259 OID 21941)
+-- Name: risk_event_sub_types; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risk_event_sub_types (
+    id integer NOT NULL,
+    id_type integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description text,
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE risk_event_sub_types OWNER TO riskman;
+
+--
+-- TOC entry 2546 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: TABLE risk_event_sub_types; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE risk_event_sub_types IS 'Подтипы событий опер. рисков';
+
+
+--
+-- TOC entry 230 (class 1259 OID 21939)
+-- Name: risk_event_sub_types_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risk_event_sub_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risk_event_sub_types_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2547 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: risk_event_sub_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risk_event_sub_types_id_seq OWNED BY risk_event_sub_types.id;
+
+
+--
+-- TOC entry 233 (class 1259 OID 21959)
+-- Name: risk_event_type_examples; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risk_event_type_examples (
+    id integer NOT NULL,
+    id_event_sub_type integer NOT NULL,
+    description text
+);
+
+
+ALTER TABLE risk_event_type_examples OWNER TO riskman;
+
+--
+-- TOC entry 2548 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: TABLE risk_event_type_examples; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE risk_event_type_examples IS 'Примеры типов событий опер. рисков';
+
+
+--
+-- TOC entry 232 (class 1259 OID 21957)
+-- Name: risk_event_type_examples_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risk_event_type_examples_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risk_event_type_examples_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2549 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: risk_event_type_examples_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risk_event_type_examples_id_seq OWNED BY risk_event_type_examples.id;
+
+
+--
+-- TOC entry 229 (class 1259 OID 21928)
+-- Name: risk_event_types; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risk_event_types (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description text,
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE risk_event_types OWNER TO riskman;
+
+--
+-- TOC entry 2550 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: TABLE risk_event_types; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE risk_event_types IS 'Типы событий опер. рисков';
+
+
+--
+-- TOC entry 228 (class 1259 OID 21926)
+-- Name: risk_event_types_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risk_event_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risk_event_types_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2551 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: risk_event_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risk_event_types_id_seq OWNED BY risk_event_types.id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 21835)
+-- Name: risk_events; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risk_events (
+    id integer NOT NULL,
+    time_reg timestamp without time zone,
+    time_event timestamp without time zone,
+    time_approch timestamp without time zone,
+    time_last_edit timestamp without time zone,
+    date_close date,
+    status smallint NOT NULL,
+    id_division_approch integer,
+    id_building integer,
+    id_division_occure integer,
+    is_risk_realised boolean,
+    id_risk integer,
+    id_emloyee_approch integer,
+    id_loss_rank integer,
+    description text,
+    gross_loss numeric(10,2),
+    net_loss numeric(10,2),
+    calc_loss numeric(10,2),
+    waste numeric(10,2),
+    compensations numeric(10,2),
+    comp_source text,
+    correction_measures text,
+    prevention_measures text,
+    is_commission boolean,
+    is_ib boolean NOT NULL
+);
+
+
+ALTER TABLE risk_events OWNER TO riskman;
+
+--
+-- TOC entry 2552 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: TABLE risk_events; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE risk_events IS 'События Опер. Рисков';
+
+
+--
+-- TOC entry 2553 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.time_reg; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.time_reg IS 'Время регистрации';
+
+
+--
+-- TOC entry 2554 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.time_event; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.time_event IS 'время возникновения события';
+
+
+--
+-- TOC entry 2555 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.time_approch; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.time_approch IS 'Время обнаружения';
+
+
+--
+-- TOC entry 2556 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.time_last_edit; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.time_last_edit IS 'время последних изменений';
+
+
+--
+-- TOC entry 2557 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.date_close; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.date_close IS 'Дата закрытия ';
+
+
+--
+-- TOC entry 2558 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.status; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.status IS 'Статус события';
+
+
+--
+-- TOC entry 2559 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.id_division_approch; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.id_division_approch IS 'Подразделение, где обнаружили';
+
+
+--
+-- TOC entry 2560 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.id_building; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.id_building IS 'Здание, где случилось';
+
+
+--
+-- TOC entry 2561 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.id_division_occure; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.id_division_occure IS 'Подразделение, где случилось';
+
+
+--
+-- TOC entry 2562 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.id_emloyee_approch; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.id_emloyee_approch IS 'Сотрудник обнаруживший событие';
+
+
+--
+-- TOC entry 2563 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.id_loss_rank; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.id_loss_rank IS 'Уровень риска';
+
+
+--
+-- TOC entry 2564 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.gross_loss; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.gross_loss IS 'Валовые потери';
+
+
+--
+-- TOC entry 2565 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.net_loss; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.net_loss IS 'Чистые потери';
+
+
+--
+-- TOC entry 2566 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.calc_loss; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.calc_loss IS 'Расчетные потери';
+
+
+--
+-- TOC entry 2567 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.waste; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.waste IS 'Учтеные убытки';
+
+
+--
+-- TOC entry 2568 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.compensations; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.compensations IS 'Компенсации';
+
+
+--
+-- TOC entry 2569 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.comp_source; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.comp_source IS 'Источники компенсаций';
+
+
+--
+-- TOC entry 2570 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.correction_measures; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.correction_measures IS 'Меры коррекции ущерба';
+
+
+--
+-- TOC entry 2571 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.prevention_measures; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.prevention_measures IS 'Меры по предотвращению';
+
+
+--
+-- TOC entry 2572 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.is_commission; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.is_commission IS 'Собиралась ли комиссия для расследования';
+
+
+--
+-- TOC entry 2573 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: COLUMN risk_events.is_ib; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risk_events.is_ib IS 'Инцидент ИБ?';
+
+
+--
+-- TOC entry 222 (class 1259 OID 21833)
+-- Name: risk_events_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risk_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risk_events_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2574 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: risk_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risk_events_id_seq OWNED BY risk_events.id;
+
+
+--
+-- TOC entry 238 (class 1259 OID 22001)
+-- Name: risk_levels; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risk_levels (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(126),
+    description character varying(255),
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE risk_levels OWNER TO riskman;
+
+--
+-- TOC entry 2575 (class 0 OID 0)
+-- Dependencies: 238
+-- Name: TABLE risk_levels; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE risk_levels IS 'Уровни опер. рисков';
+
+
+--
+-- TOC entry 237 (class 1259 OID 21999)
+-- Name: risk_levels_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risk_levels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risk_levels_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2576 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: risk_levels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risk_levels_id_seq OWNED BY risk_levels.id;
+
+
+--
+-- TOC entry 236 (class 1259 OID 21988)
+-- Name: risk_types; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risk_types (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(126),
+    description character varying(255),
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE risk_types OWNER TO riskman;
+
+--
+-- TOC entry 2577 (class 0 OID 0)
+-- Dependencies: 236
+-- Name: TABLE risk_types; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE risk_types IS 'Типы опер. рисков';
+
+
+--
+-- TOC entry 235 (class 1259 OID 21986)
+-- Name: risk_types_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risk_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risk_types_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2578 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: risk_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risk_types_id_seq OWNED BY risk_types.id;
+
+
+--
+-- TOC entry 227 (class 1259 OID 21914)
+-- Name: risks; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE risks (
+    id integer NOT NULL,
+    name character varying(255),
+    short_name character varying(126),
+    id_type integer,
+    id_level integer,
+    id_loss_rank integer,
+    loss_description text,
+    id_account_div integer,
+    id_account_employee integer,
+    date_create timestamp without time zone,
+    date_last_edit timestamp without time zone,
+    id_employee_identify integer,
+    id_user_create integer
+);
+
+
+ALTER TABLE risks OWNER TO riskman;
+
+--
+-- TOC entry 2579 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: COLUMN risks.id_account_div; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risks.id_account_div IS 'Обрабатывающее риск подразделение';
+
+
+--
+-- TOC entry 2580 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: COLUMN risks.id_account_employee; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risks.id_account_employee IS 'Сотрудник, ответственный за организацию обработки риска';
+
+
+--
+-- TOC entry 2581 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: COLUMN risks.id_employee_identify; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risks.id_employee_identify IS 'Пользователь определивший риск';
+
+
+--
+-- TOC entry 2582 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: COLUMN risks.id_user_create; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON COLUMN risks.id_user_create IS 'Пользователь зарегисрировавший риск';
+
+
+--
+-- TOC entry 226 (class 1259 OID 21912)
+-- Name: risks_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE risks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE risks_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2583 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: risks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE risks_id_seq OWNED BY risks.id;
+
+
+--
+-- TOC entry 201 (class 1259 OID 21358)
+-- Name: roles; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE roles (
+    id integer NOT NULL,
+    role_name character varying(255),
+    description character varying(255)
+);
+
+
+ALTER TABLE roles OWNER TO riskman;
+
+--
+-- TOC entry 200 (class 1259 OID 21356)
+-- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE roles_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2584 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 21754)
+-- Name: sub_activities; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE sub_activities (
+    id integer NOT NULL,
+    id_activity integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description text,
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE sub_activities OWNER TO riskman;
+
+--
+-- TOC entry 2585 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: TABLE sub_activities; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE sub_activities IS 'Подвиды банковской деятельности';
+
+
+--
+-- TOC entry 216 (class 1259 OID 21752)
+-- Name: sub_activities_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE sub_activities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE sub_activities_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2586 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: sub_activities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE sub_activities_id_seq OWNED BY sub_activities.id;
+
+
+--
+-- TOC entry 206 (class 1259 OID 21434)
+-- Name: sub_factors; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE sub_factors (
+    id integer NOT NULL,
+    id_factor integer NOT NULL,
+    name character varying(255),
+    short_name character varying(255),
+    description text,
+    e_number character varying(126) NOT NULL
+);
+
+
+ALTER TABLE sub_factors OWNER TO riskman;
+
+--
+-- TOC entry 2587 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: TABLE sub_factors; Type: COMMENT; Schema: public; Owner: riskman
+--
+
+COMMENT ON TABLE sub_factors IS 'Пдкатегирии факторов опер. рисков';
+
+
+--
+-- TOC entry 205 (class 1259 OID 21432)
+-- Name: sub_factors_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE sub_factors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE sub_factors_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2588 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: sub_factors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE sub_factors_id_seq OWNED BY sub_factors.id;
+
+
+--
+-- TOC entry 199 (class 1259 OID 21339)
+-- Name: users; Type: TABLE; Schema: public; Owner: riskman
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    login character varying(255),
+    password character varying(255),
+    time_create timestamp without time zone DEFAULT now(),
+    time_edit timestamp without time zone,
+    id_employee bigint,
+    enabled boolean DEFAULT false
+);
+
+
+ALTER TABLE users OWNER TO riskman;
+
+--
+-- TOC entry 198 (class 1259 OID 21337)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: riskman
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE users_id_seq OWNER TO riskman;
+
+--
+-- TOC entry 2589 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: riskman
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- TOC entry 2203 (class 2604 OID 21617)
+-- Name: activities id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY activities ALTER COLUMN id SET DEFAULT nextval('activities_id_seq'::regclass);
+
+
+--
+-- TOC entry 2189 (class 2604 OID 21229)
+-- Name: buildings id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY buildings ALTER COLUMN id SET DEFAULT nextval('building_id_seq'::regclass);
+
+
+--
+-- TOC entry 2190 (class 2604 OID 21230)
+-- Name: business_process id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY business_process ALTER COLUMN id SET DEFAULT nextval('business_process_id_seq'::regclass);
+
+
+--
+-- TOC entry 2191 (class 2604 OID 21231)
+-- Name: divisions id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY divisions ALTER COLUMN id SET DEFAULT nextval('division_id_seq'::regclass);
+
+
+--
+-- TOC entry 2192 (class 2604 OID 21232)
+-- Name: emails id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY emails ALTER COLUMN id SET DEFAULT nextval('emails_id_seq'::regclass);
+
+
+--
+-- TOC entry 2202 (class 2604 OID 21455)
+-- Name: factor_examples id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY factor_examples ALTER COLUMN id SET DEFAULT nextval('factor_examples_id_seq'::regclass);
+
+
+--
+-- TOC entry 2200 (class 2604 OID 21415)
+-- Name: factors id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY factors ALTER COLUMN id SET DEFAULT nextval('factors_id_seq'::regclass);
+
+
+--
+-- TOC entry 2205 (class 2604 OID 21716)
+-- Name: loss_ranks id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_ranks ALTER COLUMN id SET DEFAULT nextval('loss_ranks_id_seq'::regclass);
+
+
+--
+-- TOC entry 2207 (class 2604 OID 21775)
+-- Name: loss_sub_types id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_sub_types ALTER COLUMN id SET DEFAULT nextval('loss_sub_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2204 (class 2604 OID 21647)
+-- Name: loss_types id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_types ALTER COLUMN id SET DEFAULT nextval('loss_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2208 (class 2604 OID 21794)
+-- Name: phones id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY phones ALTER COLUMN id SET DEFAULT nextval('phones_id_seq'::regclass);
+
+
+--
+-- TOC entry 2195 (class 2604 OID 21234)
+-- Name: positions id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY positions ALTER COLUMN id SET DEFAULT nextval('positions_id_seq'::regclass);
+
+
+--
+-- TOC entry 2212 (class 2604 OID 21944)
+-- Name: risk_event_sub_types id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_sub_types ALTER COLUMN id SET DEFAULT nextval('risk_event_sub_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2213 (class 2604 OID 21962)
+-- Name: risk_event_type_examples id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_type_examples ALTER COLUMN id SET DEFAULT nextval('risk_event_type_examples_id_seq'::regclass);
+
+
+--
+-- TOC entry 2211 (class 2604 OID 21931)
+-- Name: risk_event_types id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_types ALTER COLUMN id SET DEFAULT nextval('risk_event_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2209 (class 2604 OID 21838)
+-- Name: risk_events id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_events ALTER COLUMN id SET DEFAULT nextval('risk_events_id_seq'::regclass);
+
+
+--
+-- TOC entry 2215 (class 2604 OID 22004)
+-- Name: risk_levels id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_levels ALTER COLUMN id SET DEFAULT nextval('risk_levels_id_seq'::regclass);
+
+
+--
+-- TOC entry 2214 (class 2604 OID 21991)
+-- Name: risk_types id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_types ALTER COLUMN id SET DEFAULT nextval('risk_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2210 (class 2604 OID 21917)
+-- Name: risks id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risks ALTER COLUMN id SET DEFAULT nextval('risks_id_seq'::regclass);
+
+
+--
+-- TOC entry 2199 (class 2604 OID 21361)
+-- Name: roles id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- TOC entry 2206 (class 2604 OID 21757)
+-- Name: sub_activities id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_activities ALTER COLUMN id SET DEFAULT nextval('sub_activities_id_seq'::regclass);
+
+
+--
+-- TOC entry 2201 (class 2604 OID 21437)
+-- Name: sub_factors id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_factors ALTER COLUMN id SET DEFAULT nextval('sub_factors_id_seq'::regclass);
+
+
+--
+-- TOC entry 2196 (class 2604 OID 21342)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- TOC entry 2471 (class 0 OID 21614)
+-- Dependencies: 210
+-- Data for Name: activities; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY activities (id, name, short_name, description, e_number) FROM stdin;
+1	Банковское обслуживание физических лиц	Обслуживание физических лиц	Банковское обслуживание физических лиц	1
+2	Банковское обслуживание юридических лиц 	Обслуживание юридических лиц 	Банковское обслуживание юридических лиц 	2
+3	Агентские услуги	Агентские услуги	Агентские услуги	3
+4	Осуществление платежей и расчетов (кроме платежей и расчетов, осуществляемых в рамках обслуживания своих клиентов)	Осуществление собственных платежей и расчетов	Осуществление платежей и расчетов (кроме платежей и расчетов, осуществляемых в рамках обслуживания своих клиентов)	4
+5	Операции и сделки на рынке ценных бумаг и срочных финансовых инструментов	Операции и сделки на рынке ценных бумаг и срочных финансовых инструментов	Операции и сделки на рынке ценных бумаг и срочных финансовых инструментов 	5
+6	Оказание банковских услуг корпоративным клиентам, органам государственной власти и местного самоуправления на рынке капиталов	Оказание банковских услуг корпоративным клиентам, органам государственной власти и местного самоуправления на рынке капиталов	Оказание банковских услуг корпоративным клиентам, органам государственной власти и местного самоуправления на рынке капиталов	6
+7	Управление активами	Управление активами	Управление активами	7
+8	Брокерская деятельность	Брокерская деятельность	Брокерская деятельность	8
+\.
+
+
+--
+-- TOC entry 2590 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: activities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('activities_id_seq', 8, true);
+
+
+--
+-- TOC entry 2591 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: building_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('building_id_seq', 1, false);
+
+
+--
+-- TOC entry 2446 (class 0 OID 21159)
+-- Dependencies: 185
+-- Data for Name: buildings; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY buildings (id, name, id_address) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2448 (class 0 OID 21167)
+-- Dependencies: 187
+-- Data for Name: business_process; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY business_process (id, name, short_name, description, number, parent_process_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2592 (class 0 OID 0)
+-- Dependencies: 188
+-- Name: business_process_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('business_process_id_seq', 1, false);
+
+
+--
+-- TOC entry 2593 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: division_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('division_id_seq', 1, false);
+
+
+--
+-- TOC entry 2450 (class 0 OID 21175)
+-- Dependencies: 189
+-- Data for Name: divisions; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY divisions (id, name, parent_div_id, external_id, date_add, date_remove) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2452 (class 0 OID 21183)
+-- Dependencies: 191
+-- Data for Name: emails; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY emails (id, id_employee, email) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2594 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('emails_id_seq', 1, false);
+
+
+--
+-- TOC entry 2454 (class 0 OID 21188)
+-- Dependencies: 193
+-- Data for Name: employee_appointment; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY employee_appointment (id_employee, id_division, id_position, date_app, app_order) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2455 (class 0 OID 21191)
+-- Dependencies: 194
+-- Data for Name: employees; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY employees (id, name, mid_name, surname, description, is_work, date_dismiss, external_id, tab_num) FROM stdin;
+1	Павел	Васильевич	Скворцов	тест	t	\N	1	1
+\.
+
+
+--
+-- TOC entry 2595 (class 0 OID 0)
+-- Dependencies: 195
+-- Name: employees_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('employees_id_seq', 1, true);
+
+
+--
+-- TOC entry 2469 (class 0 OID 21452)
+-- Dependencies: 208
+-- Data for Name: factor_examples; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY factor_examples (id, id_sub_factor, description) FROM stdin;
+1	1	Непродуманность отдельных частей бизнес-процессов
+2	1	Неадекватность бизнес-процессов
+3	1	Риски проектов
+4	1	Ошибки проектирования бизнес-процессов
+5	1	Новизна бизнес-процесса, продукта, услуги или технологии
+6	1	Недостатки в структуре или организации бизнес-процессов, продуктов и услуг Банка
+7	2	Значительная доля субъективных суждений при принятии управленческих решений, отсутствие объективной оценки
+8	2	Предоставление завышенных полномочий работникам по принятию решения о проведении операции и определению ее рискованности
+9	3	недостаточные правовые основания при управлении недвижимостью и активами
+10	3	недостаточная правовая защита и ошибки в договорах и соглашениях с клиентами и контрагентами
+11	3	ошибки при осуществлении судебно-исковой деятельности
+12	4	несоответствие ВНА и бизнес-процессов требованиям законодательства
+13	4	несоответствие договоров и соглашений требованиям законодательства
+14	5	Зависимость сроков/ результата одной операции от сроков/ результата другой
+15	5	Значительная взаимосвязанность процессов или операций между собой
+16	6	Сложность или перегруженность бизнес-процесса
+17	6	Объем проводимых операций достиг неприемлемого для бизнес-процесса уровня
+18	6	Перегруженность бизнес процесса или сложность технологической цепочки
+19	7	Отсутствие или неэффективность текущего контроля за правильностью и уровнем риска проводимых операций
+20	7	Отсутствие контроля за реализацией бизнес-процесса
+21	8	Недостаточные формализация порядка проведения операций и определение  методов контроля
+22	8	Отсутствие или неполнота обязанностей сотрудников в должностных инструкциях
+23	8	Недостаточная формализация бизнес-процессов и разграничения полномочий
+24	8	Некорректно прописаны или отсутствуют внутренние документы, регламентирующие пошаговую реализацию бизнес-процесса или его части
+25	9	Неадекватная организационная структура Банка в части распределения полномочий структурных подразделений и служащих, порядков и процедур совершения банковских операций и других сделок, их документирования и отражения в учете
+26	9	Неадекватного определения стратегии или установления целей бизнеса
+27	9	Непрозрачная организационная структура
+28	9	Невозможность систематизации продуктов, услуг или процессов
+29	9	Чрезмерная бюрократия
+30	9	Пересечение обязанностей, функций или ответственности подразделений
+31	10	Несовершенство процессов обмена информацией между подразделениями
+32	10	Недостаточный или отсутствующий контроль за достоверностью информации, в том числе за актуальностью, полнотой и точностью
+33	10	Недоступность или недостаток информации для выполнения должностных обязанностей
+34	10	Прочие риски, связанные с обеспечение бизнес-процессов информацией
+35	11	Подробная классификация приведена в Приложении ХХХ
+36	12	прочее
+37	13	Низкая квалификация и некомпетентность персонала
+38	13	Невозможность найма компетентного персонала (низкий уровень оплаты труда, неудобное расположение офиса, недостаток информации об открытой вакансии и т.п.)
+39	13	Низкое качество подбора персонала, в том числе отсутствие установленных критериев квалификационных и личностных характеристик сотрудников в зависимости от содержания  и объема работы
+40	14	высокий уровень зависимости результата от эффективности работы и внимательности персонала Банка
+41	14	Высокая доля операций, проводимых вручную
+42	15	Низкая заменяемость сотрудника
+43	15	Замкнутость операций или значительной части бизнес-процесса на определенном сотруднике, его знаниях и квалификации
+44	16	Нечестность персонала и мошенничество
+45	16	Недисциплинированность персонала
+46	17	Высокая загруженность систем, обеспечивающих проведение банковских  операций
+47	17	Предельная загрузка мощностей
+48	18	Высокая степень зависимости возможности проведения операций Банка от работоспособности информационных, коммуникационных и других АБС
+49	19	Низкая эффективность или работоспособность информационных и технических систем, обеспечивающих деятельность Банка
+50	19	Отсутствие детальных планов действий в нештатных ситуациях
+51	19	Отсутствие резервного копирования информации
+52	19	Отсутствие резервирования и дублирования информационных систем и их компонентов
+53	19	Недостаточная поддержка и сопровождение систем
+54	20	Кражи и грабежи
+55	20	Подделка и мошенничество с денежными знаками и чеками
+56	20	Кредитные мошенничества
+57	20	Мошенничество с пластиковыми картами
+58	20	Мошенничество с платежными системами
+59	20	Вандализм и хулиганство
+60	20	ДТП
+61	21	Отсутствие детальных планов действий в нештатных ситуациях
+62	21	Отсутствие охраны и сигнализации
+63	21	Отсутствие резервных помещений для экстренного переноса деятельности Банка
+64	21	Отсутствие резервирования и дублирования информационных систем и их компонентов
+65	21	Стихийные бедствия
+66	21	Стихийные бедствия
+67	21	Массовые беспорядки
+68	21	Терроризм
+69	21	Ликвидация производителей вычислительной техники и программного обеспечения, сервисных провайдеров, обеспечивавших работоспособность информационных систем
+70	21	Чрезвычайные происшествия
+71	22	Изменения требований регуляторов
+72	22	Санкции и ограничения
+73	22	Изменение макроэкономической ситуации в регионе присутствия Банка
+74	22	Политическая и социальная нестабильность в регионе присутствия Банка
+75	11	нарушения операторами платежных систем требований к обеспечению защиты информации установленных в Положении 382-П от 9.06.2012;
+76	11	нарушение участниками платежной системы Банка России требований к обеспечению защиты информации установленных в Положении 552-П от 24.08.2016;\r\n
+77	11	нарушения участниками прочих систем расчетов требований к обеспечению защиты информации, установленных данными системами.\r\n
+78	11	Иные ошибки и недостатки при организации процесса защиты информации;\r\n
+79	11	недостатки в работе аппаратных средств;\r\n
+80	11	недостатки (ошибки) в программном обеспечении;\r\n
+81	11	недостатки коммуникационных сетей и сетевой аппаратуры;\r\n
+82	11	недостатки антивирусной защиты и защиты от вредоносного кода;\r\n
+83	11	недостатки систем контроля доступа и аутентификации;\r\n
+84	11	ошибки персонала при настройке оборудования и программного обеспечения\r\n
+85	19	Сбои систем обеспечения электроэнергией, недостатки систем бесперебойного электропитания
+89	16	несанкционированный физический доступ в помещения, кабинеты, вычислительные центры, к аппаратным средствам управления вычислительной техникой
+86	19	Отказы систем кондиционирования
+87	19	Недостатки систем физического контроля доступа
+90	16	физическое повреждение оборудования и его компонентов, носителей информации
+88	19	Сбои других систем, обеспечивающих функционирование информационной инфраструктуры и систем защиты информации Банка
+91	16	подмена или кража оборудования и комплектующих
+92	16	сохранение информации с физических носителей, в том числе экранов мониторов, бумажных копий и т.п. при помощи фото-видео оборудования
+93	16	подслушивание и скрытое записывание звуковой информации
+94	16	подбор паролей изнутри сети банка (Brute Force)
+95	16	получение несанкционированного удаленного доступа в сеть Банка
+96	16	несанкционированное сканирование сети Банка изнутри с целью получения технической информации о ней
+97	16	модификация BIOS с целью загрузки постороннего или вредоносного ПО
+99	16	внедрение в инфраструктуру банка фишинговых или подставных устройств с целью перенаправления на них сетевого трафика с целью дальнейших злонамеренных действий с ним
+98	16	перехват вводимой информации путем использования программно-технических средств
+100	16	иные действия персонала с информационными системами
+101	20	подбор паролей из вне сети Банка (Brute Force)
+102	20	сканирование сети снаружи с целью получения технической информации о ней, в том числе уязвимостей
+103	20	атака на web-сервисы банка, в том числе находящиеся на аутсорсинге, в том числе атаки на отказ сервисов
+104	20	применение методов социальной инженерии с целью получения учетных данных или выполнения нелегальных операций
+105	20	получение несанкционированного удаленного доступа в сеть Банка
+106	20	перехват вводимой информации путем использования программно-технических средств
+107	20	перехват вводимой информации путем использования программно-технических средств
+108	20	внедрение в инфраструктуру банка фишинговых или подставных устройств с целью перенаправления на них сетевого трафика с целью дальнейших злонамеренных действий с ним
+\.
+
+
+--
+-- TOC entry 2596 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: factor_examples_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('factor_examples_id_seq', 108, true);
+
+
+--
+-- TOC entry 2465 (class 0 OID 21412)
+-- Dependencies: 204
+-- Data for Name: factors; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY factors (id, name, short_name, description, e_number) FROM stdin;
+1	Ошибки и недостатки бизнес-процессов	Бизнес-процессы	Риск бизнес-процессов — риск потерь, связанный с ошибками в процессах проведения операций и расчетов по ним, их учета и отчетности, отсутствие или несовершенство внутренних процедур и регламентов проведения операций и систем контроля. В данную категорию включаются также риски, вызванные утечкой информации и использованием ее конкурентами или сотрудниками в целях, которые могут негативно отразится на деятельности Банка, а также несовершенство процессов обмена необходимой информацией между подразделениями и риски несовершенной организационной структуры Банка в части распределения полномочий структурных подразделений и служащих, порядков и процедур совершения банковских операций и других сделок, их документирования и отражения в учете, неадекватного определения стратегии или установления целей бизнеса	1
+2	Персонал	Персонал	Риск действий персонала — риск потерь, связанный с возможными ошибками сотрудников, их мошенничеством, злоупотреблениями, недостаточной компетентностью	2
+3	Системы и технологии	Системы и технологии	Риск потерь, связанных с технологиями, технологические риски — риск потерь, обусловленный несовершенством используемых технологий, недостаточной емкостью систем, каналов связи, несоответствие возможностей систем проводимым операциям, грубость методов обработки данных, неадекватность используемой информации или ее потеря	3
+4	Внешние события	Внешние события	Риск внешних событий - Риски чрезвычайных ситуаций, в том числе природного и техногенного характера, а также риски противоправных действий третьих лиц по отношению к Банку, как преднамеренных, так и непреднамеренных	4
+\.
+
+
+--
+-- TOC entry 2597 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: factors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('factors_id_seq', 4, true);
+
+
+--
+-- TOC entry 2476 (class 0 OID 21724)
+-- Dependencies: 215
+-- Data for Name: loss_rank_values; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY loss_rank_values (id_rank, value, value_type, date_set, date_end, description) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2475 (class 0 OID 21713)
+-- Dependencies: 214
+-- Data for Name: loss_ranks; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY loss_ranks (id, name, short_name, description, e_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2598 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: loss_ranks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('loss_ranks_id_seq', 1, false);
+
+
+--
+-- TOC entry 2480 (class 0 OID 21772)
+-- Dependencies: 219
+-- Data for Name: loss_sub_types; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY loss_sub_types (id, id_loss, name, short_name, description, e_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2599 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: loss_sub_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('loss_sub_types_id_seq', 1, false);
+
+
+--
+-- TOC entry 2473 (class 0 OID 21644)
+-- Dependencies: 212
+-- Data for Name: loss_types; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY loss_types (id, name, short_name, description, e_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2600 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: loss_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('loss_types_id_seq', 1, false);
+
+
+--
+-- TOC entry 2482 (class 0 OID 21791)
+-- Dependencies: 221
+-- Data for Name: phones; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY phones (id, id_employee, tel) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2601 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: phones_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('phones_id_seq', 1, false);
+
+
+--
+-- TOC entry 2457 (class 0 OID 21202)
+-- Dependencies: 196
+-- Data for Name: positions; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY positions (id, name, is_executive, external_id, date_add, date_remove) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2602 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: positions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('positions_id_seq', 1, false);
+
+
+--
+-- TOC entry 2486 (class 0 OID 21897)
+-- Dependencies: 225
+-- Data for Name: r_events_activities; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY r_events_activities (id_event, id_sub_activity, reason) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2485 (class 0 OID 21844)
+-- Dependencies: 224
+-- Data for Name: r_events_factors; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY r_events_factors (id_event, id_sub_factor, reason) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2500 (class 0 OID 22189)
+-- Dependencies: 239
+-- Data for Name: r_events_losses; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY r_events_losses (id_event, id_loss_sub_type, loss_description) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2495 (class 0 OID 21970)
+-- Dependencies: 234
+-- Data for Name: r_events_risk_event_types; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY r_events_risk_event_types (id_event, id_event_sub_type, reason) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2463 (class 0 OID 21382)
+-- Dependencies: 202
+-- Data for Name: r_user_roles; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY r_user_roles (id_user, id_role) FROM stdin;
+1	1
+\.
+
+
+--
+-- TOC entry 2492 (class 0 OID 21941)
+-- Dependencies: 231
+-- Data for Name: risk_event_sub_types; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risk_event_sub_types (id, id_type, name, short_name, description, e_number) FROM stdin;
+1	1	Несанкционированная деятельность	Несанкционированная деятельность	Случаи нарушения законодательства, норм и внутренних положений Банка, не приводящие к получению личной финансовой выгоды.	1.1
+2	1	Мошенническая деятельность 	мошенничество	Противоправные действия аффилированных с Банком лиц, направленные на получение личной финансовой выгоды, исключая мошенничество, связанное с несанкционированным доступом к информационным системам.	1.2
+4	1	Иные действия, совершенные со злым умыслом	Прочее	Случаи умышленного нанесения вреда Банку, но без получения личной выгоды	1.4
+5	2	Ограбление или хищения	Ограбление или хищения	Ограбление или хищения	2.1
+6	2	Кредиты 	Кредиты 	Случаи кредитного мошенничества	2.2
+7	2	Денежные знаки	Денежные знаки	Случаи подделки денежных знаков	2.3
+8	2	Чеки	Чеки	Случаи мошенничества с чеками 	2.4
+9	2	Пластиковые карты	Пластиковые карты	Незаконные операции с пластиковыми картами (кредитными, дебетовыми, и т.д.)	2.5
+10	2	Противоправные действия контрагентов 	Противоправные действия контрагентов 	Случаи преднамеренного невыполнения контрагентами своих обязательств перед Банком	2.6
+11	2	Иные мошеннические действия	Иные мошеннические действия	Действия, направленные на получение личной экономической выгоды.	2.7
+12	2	Внешняя безопасность банковских информационных систем	Внешняя безопасность банковских информационных систем	Случаи несанкционированного доступа или попыток несанкционированного доступа и использования (третьими лицами) внутрисистемной информации Банка с целью обладания, манипуляции, повреждения информации или использования информационных систем и ресурсов Банка 	2.8
+13	3	Взаимоотношения Банка с сотрудниками	Взаимоотношения Банка с сотрудниками	Случаи невыполнения трудового законодательства, норм, положений, включая любые обоснованные иски Банку предъявленные сотрудниками, а также все соответствующие компенсации и возмещения.	3.1
+14	3	Взаимоотношения между сотрудниками	Взаимоотношения между сотрудниками	                                                                                                           Случаи конфликтов между сотрудниками, отказ одного сотрудника эффективно взаимодействовать с  другим сотрудником для достижения поставленных перед Банком целей наилучшим образом	3.2
+15	3	Безопасность рабочих мест	Безопасность рабочих мест	Случаи несоблюдения трудового законодательства или норм здравоохранения, а также положений, касающихся безопасности рабочих мест, а также случаи нанесения вреда здоровью сотрудников при выполнении ими своих должностных обязанностей или на территории Банка.  Все соответствующие компенсации и возмещения включаются в данную категорию.	3.3
+16	3	Квалификация персонала	Квалификация персонала	Случаи обоснованного несоответствия сотрудника занимаемой должности	3.4
+17	3	Дискриминация персонала	Дискриминация персонала	Случаи дискриминации сотрудников.  Все соответствующие компенсации и возмещения включаются в данную категорию.	3.5
+18	4	Раскрытие информации о клиентах 	Раскрытие информации о клиентах 	Случаи неисполнения обязательств перед клиентами.	4.1
+19	4	Несоблюдение правил ведения бизнеса (рыночных практик)	Несоблюдение рыночных практик	Случаи умышленного нарушения устоявшихся правил ведения бизнеса с контрагентами, клиентами, поставщиками, сотрудниками, являющимися клиентами Банка.	4.2
+20	4	Нарушение требований регуляторов  	Нарушение требований регуляторов  	Нарушение требований регуляторов, в том числе нарушение банковского, антимонопольного законодательства, закона по противодействию легализации (отмыванию) доходов, полученных преступным путем и финансирования терроризма.	4.3
+21	4	Некачественность банковских продуктов и услуг 	Некачественность банковских продуктов и услуг 	Некачественные продукты или услуги, либо ошибки при составлении контрактов	4.4
+22	4	Выбор клиента, финансирование и лимиты 	Выбор клиента, финансирование и лимиты 	Ошибки при выборе клиентов, анализе их потребностей или превышение установленных лимитов	4.5
+23	4	Общественная безопасность и иные правила 	Общественная безопасность и иные правила 	 Случаи нарушения норм и правил общественной безопасности (окружающая среда и т.п.) и иных небанковских нормативных актов	4.6
+24	5	Стихийные бедствия	Стихийные бедствия	Случаи причинения ущерба активам Банка (персонал, материальные ценности, здания, материально-техническая база, информация), а также остановки бизнес - деятельности по причине которых послужили природные катаклизмы. В данную подкатегорию также включаются случаи гражданской ответственности Банка перед третьими лицами в результате природных катаклизмов.	5.1
+25	5	Терроризм	Терроризм	Ущерб, причиненный активам Банка (персонал, мат. ценности, здания, материально-техническая база, информация, и т.п.), невозможность функционирования в полном объеме или гражданская ответственность перед третьими лицами в результате террористических актов. 	5.2
+26	5	Форс - мажор	Форс - мажор	Ущерб физическим активам Банка (персонал, мат. ценности, здания, материально-техническая база, информация, и т.п.), невозможность функционирования в полном объеме или гражданская ответственность Банка перед третьими лицами в результате аварий или несчастных случаев, за исключением стихийных бедствий.	5.3
+27	5	Неумышленное причинение ущерба третьими лицами 	Неумышленное причинение ущерба третьими лицами 	Случаи неумышленного нанесения вреда активам Банка, в том числе его сотрудникам, третьими лицами	5.4
+28	5	Законы и решения суда с ретроактивным эффектом 	Законы и решения суда с ретроактивным эффектом 	События, связанные с изменениями в политической и/или регуляторной среде	5.5
+29	6	Информационные системы	Информационные системы	Случаи, вызванные техническими проблемами с информационными системами, например недоступность, неэффективность, неисправность или отказ информационных систем (аппаратура, ПО, телекоммуникации и т.д.)	6.1
+30	6	Платежные системы и информационные провайдеры	Платежные системы и информационные провайдеры	Проблемы или сбои при в предоставлении платежных и информационных услуг, в том числе  телефония и Интернет. 	6.2
+31	6	Коммунальные службы	Коммунальные службы	Проблемы и сбои при предоставлении коммунальных услуг, в том числе электричество, водоснабжение, канализация	6.3
+32	7	Ошибки сотрудников	Ошибки сотрудников	Ошибки или промедления как при выполнении работ, так и при регистрации и сопровождении операций, в том числе ввод данных, процессинг, переводы, процессинговые операции с ценными бумагами, валютой, производными финансовыми инструментами, т.д.), причиной которых стала невнимательность, некомпетентность, халатность сотрудника.	7.1
+33	7	Торговые контрагенты 	Торговые контрагенты 	Ошибки, промедления в исполнении или неисполнение обязательств перед Банком (ценные бумаги, производные финансовые инструменты и т.д.) торговыми контрагентами  по причине халатности или некомпетентности их сотрудников (не мошенничество!)	7.2
+34	7	Поставщики и подрядчики	Поставщики и подрядчики	Ошибки, промедления в исполнении или неисполнение обязательств перед Банком поставщиками и подрядчиками по причине халатности или некомпетентности их сотрудников, или банкротства (не мошенничество!)	7.3
+35	7	Взаимодействие с клиентами 	Взаимодействие с клиентами 	Случаи невыполнения требований по обязательной отчетности или недостоверные внешние отчеты клиентам	7.4
+36	7	Документы клиентов	Документы клиентов	Случаи неполных или некорректно составленных пакетов клиентских документов	7.5
+37	7	Управление счетами клиентов	Управление счетами клиентов	Ошибки в отражении клиентских данных или нанесение ущерба активам клиента	7.6
+38	7	Внешняя отчетность и контроль	Внешняя отчетность и контроль	Несвоевременное предоставление или не предоставление обязательных отчетов Регуляторам и Надзорным органам, а также некорректное или небрежное составление этих отчетов	7.7
+39	7	Нормативная база Банка 	Нормативная база Банка 	Отсутствие или неадекватность внутрибанковских нормативных документов, требуемых Регуляторами или необходимых для эффективного функционирования Банка	7.8
+43	7	Нарушения защиты информации в результате взлома или обхода систем защиты информации в электронных базах данных и системах хранения со стороны сотрудников Банка или действий третьих лиц, 	Нарушения защиты информации в результате взлома	Нарушения защиты информации в результате взлома или обхода систем защиты информации в электронных базах данных и системах хранения со стороны сотрудников Банка или действий третьих лиц, 	7.9
+44	7	Иные события риска ИБ, не являющиеся нарушениями системы защиты информации, как то, нарушения конфиденциальности, целостности или доступности данных при их хранении, обработке или передаче, связанные с организационными и технологическими недостатками орга	Иные события риска ИБ, не являющиеся нарушениями системы защиты 	Иные события риска ИБ, не являющиеся нарушениями системы защиты информации, как то, нарушения конфиденциальности, целостности или доступности данных при их хранении, обработке или передаче, связанные с организационными и технологическими недостатками организации, информационной инфраструктуры и технологий	7.10
+3	1	Внутренняя Безопасность информационных систем Банка	Безопасность ИТ	Случаи несанкционированного доступа и/или использования (аффилированным лицом) внутрисистемной информации Банка, умышленные манипуляции, разглашение, повреждение и удаление данных, несанкционированное использование информационных систем и ресурсов	1.3
+\.
+
+
+--
+-- TOC entry 2603 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: risk_event_sub_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risk_event_sub_types_id_seq', 45, true);
+
+
+--
+-- TOC entry 2494 (class 0 OID 21959)
+-- Dependencies: 233
+-- Data for Name: risk_event_type_examples; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risk_event_type_examples (id, id_event_sub_type, description) FROM stdin;
+1	1	Умышленное не отражение операций в отчетности
+2	1	Проведение несанкционированных операций (связанных с денежными потерями)
+3	1	Осуществление заведомо ошибочных операций
+4	1	Умышленное искажение информации
+5	1	Преднамеренная манипуляция с документацией
+6	1	Умышленное нарушение внутрибанковских нормативных документов (Приказов, Распоряжений, Политик, Регламентов, Процедур, Методик, Положений и т.д.)
+7	1	Злоупотребление должностными полномочиями
+8	2	Любые виды мошенничества, в том числе мошенничество с кредитами 
+9	2	Любые виды подделки документов, в том числе подлог, фальсификация, отмывание доходов, подделка, чеков и оформление необеспеченных чеков или депозитов
+10	2	Взятки, контрабанда, подкуп
+11	2	Воровство, вымогательство, незаконное присвоение имущества сотрудников, клиентов и иных третьих лиц на территории Банка или во время исполнения своих должностных обязанностей, разбой
+12	2	Незаконное присвоение корпоративного имущества (денежные средства, материальные ценности)
+13	2	Снятие средств со счетов путем подражания другому лицу
+14	2	Манипуляции со счетами с целью проведения фиктивных операций
+15	2	Инсайдерский трейдинг (не от лица Банка)
+16	2	Иная незаконная деятельность (уклонение от налогов/подкуп/взятки/откаты/контрабанда)
+17	3	Неправильное использование информационных систем и ресурсов
+18	3	Манипуляции с файлами и программами
+19	3	Несанкционированная установка ПО сотрудниками Бака
+20	3	Неправомерное использование конфиденциальной информации, полученной в результате взлома систем
+21	3	Несанкционированный доступ к внутренним системам и информации в них
+22	3	Иные виды компьютерных преступлений (посягательства хакеров, кража информации, повлекшая за собой денежные потери и т.д.)
+23	4	Вандализм
+24	4	Причинение ущерба материальным ценностям и другим активам банка
+25	4	Другое
+26	5	Хищение
+27	5	Ограбление
+28	6	Получение кредитов по поддельным документам (например, документы, удостоверяющие личность, справка по форму 2НДФЛ, заверенная работодателем копия трудовой книжки и т.д.)
+29	6	Получение кредитов путем подражания другому лицу
+30	6	Вывод обеспечения изпод залога
+31	7	Подделка российских рублей
+32	7	Подделка иностранной валюты
+33	8	Украденные чеки
+34	8	Чеки без покрытия
+35	8	Подделка подписи на чеках
+36	8	Чеки, обналиченные обманным путем
+37	9	Подделка пластиковых карт
+38	9	Иные виды мошенничества с пластиковыми картами
+39	10	Невозможность выйти на контакт с контрагентом (фиктивная фирма)
+40	10	Преднамеренное неисполнение контрагентами своих обязательств перед Банком
+41	10	Иные виды мошенничества контрагентов
+42	11	Подделка платежных документов или получение мошеннических платежных поручений клиента (напр., внесение поддельных подписей или противоправных изменений в платежные поручения, векселя, банковские тратты и акцепты, депозитные сертификаты, выданные банком)
+43	11	Подделка ценных бумаг (для добросовестно осуществляемых и обычных в рамках ведения бизнеса операций с ценными бумагами в документарной форме)
+44	11	Преднамеренные противоправные действия третьих лиц, в результате которых был нанесен ущерб заложенному Банку имуществу или имущество украдено
+45	11	Гражданская ответственность, возникшая в результате внешнего мошенничества, подлога, подделки (за искл. пластиковых карт, чеков и кредитов)
+46	12	Вред, нанесенный злоумышленниками прикладным программам и СУБД (прорыв средств сетевой защиты и т.д.)
+47	12	Несанкционированный доступ к прикладным программам и СУБД
+48	12	Взлом сетевых серверов (вебсервер, почтовый сервер, проксисервер и т.д.)
+49	12	Внедрение вирусов 
+50	12	Прослушивание телефонных разговоров при передаче/получении данных
+51	12	Иные виды компьютерных преступлений (посягательства хакеров, кража информации, повлекшая за собой денежные потери и т.д.)
+52	13	Не выполнение трудового законодательства (компенсации, пособия по безработице, больничные листы)
+53	13	Прецеденты с сотрудниками (несоблюдение условий трудового договора, необоснованный перевод  или увольнение сотрудника)
+54	13	Возмещения, выплата пособий (в случае смерти или болезни), при расторжении договора (в случае ошибок в процессе)
+55	13	Дисциплинарные санкции к сотрудникам (замечания, выговоры и т.д.)
+56	13	Организация трудовой деятельности (шантаж, запугивание и т.д.)
+57	14	Отказ одного сотрудника работать с другим
+58	14	Пренебрежительное отношение сотрудника к действиям, просьбам и т.д. другого сотрудника, в том числе неоправданное затягивание сроков
+59	14	Оскорбление одного сотрудника другим
+60	14	Необоснованный отказ сотрудника в предоставлении информации, необходимой для выполнения служебных обязанностей другого сотрудника 
+61	15	Несоблюдение норм по здравоохранению и безопасности труда сотрудников (возмещение последствий несчастных случаев на рабочем месте, компенсации за бездействие вследствие халатности)
+62	15	Дополнительное страхование жизни 
+63	15	Несчастные случаи с сотрудниками Банка при выполнении ими своих должностных обязанностей или на территории Банка.
+64	16	Систематическое невыполнение поставленных перед сотрудником задач, планов и т.д.
+65	16	Результаты работы сотрудника постоянно низкого качества
+66	17	Все виды дискриминации сотрудников (половая, расовая, религиозная, возрастная, национальная, …)
+67	17	Оказание давления на сотрудника со стороны коллектива
+68	18	Нарушение инструкций (правил поведения)
+69	18	Нарушение требований и инструкций по хранению конфиденциальной информации клиентов  
+70	18	Разглашение конфиденциальной информации
+71	18	Злоупотребление, халатное/незаконное использование конфиденциальной/внутренней информации
+72	18	Отсутствие/неадекватность информации о нарушении прав клиента (в отношении продаж продуктов)
+73	18	Утечка конфиденциальной информации о клиентах
+74	19	Манипуляции с ценами на рынке ценных бумаг/ нарушение практики торговых и рыночных отношений
+75	19	Неправомерное использование служебной информации при осуществлении профессиональной деятельности на рынке ценных бумаг
+76	19	Нелицензированная деятельность
+77	19	Инсайдерский трейдинг (от лица Банка)
+78	19	Конфликт интересов при осуществлении профессиональной деятельности на рынке ценных бумаг
+79	19	Невыполнение требований законодательства
+80	19	Агрессивные продажи (навязывание услуг)
+81	19	Дискриминация клиентов
+82	19	Сговор по ценам
+83	20	Нарушение антитрестового законодательства
+84	20	Нарушение банковского законодательства
+85	20	Нарушение закона о Противодействии легализации (отмыванию) доходов, полученных преступным путем и финансированию терроризма 
+86	21	Ошибки при моделировании и разработке продуктов
+87	21	Двойственные для трактовки либо заведомо неверные контрактные пункты
+88	22	Ошибки, несоответствия требованиям, просчеты при поиске, выборе и анализе клиента согласно установленным нормам
+89	22	Нарушение лимитов
+90	23	Нарушение общественного права и национальной безопасности (загрязнение окружающей среды)
+91	23	Гражданская ответственность перед третьими лицами
+92	24	Ущерб реальным активам Банка вследствие стихийных бедствий (ураганы, торнадо, чрезмерные заморозки, извержения, землетрясения, сход лавин)
+93	24	Ущерб виртуальным активам Банка в результате природных катаклизмов
+94	25	Все издержки и обязательства вследствие срыва деятельности в результате террористического акта
+95	25	Потери (включая человеческие жертвы) в результате террористических актов
+96	26	Затопление помещений Банка в результате прорыва канализационных труб
+97	26	Возгорание в результате короткого замыкания
+98	26	ДТП с участием Банковских машин
+99	26	Все издержки и обязательства вследствие срыва деятельности в результате несчастного случая/ аварии
+100	26	Обрушение конструкций
+101	27	Вандализм
+102	27	Халатность
+103	27	Причинение ущерба активам Банка
+104	28	Изменения в законодательстве
+105	28	Политические изменения (выборы и т.д.)
+106	29	Недоступность одного или более приложений 
+107	29	Невозможность получения/отправки данных 
+108	29	Невозможность осуществления какой-либо операции из-за сбоя ПО или оборудования
+109	29	Потеря информации из-за системного сбоя
+110	29	Неверная автоматическая обработка (массива, в режиме реального времени, и т.д.) данных (входные или исходные данные неправильны или неполные)
+111	29	Данные в системе недоступны или неактуальны 
+112	29	Системные сбои (прикладные программы, СУБД, сеть, и т.д.)
+113	30	Сбой в предоставлении информационных услуг (Bloomberg, Reuters,…)
+114	30	Сбой в предоставлении платежных услуг (сеть БР, SWIFT, и т.д.)
+115	30	Сбой в предоставлении доступа в глобальные информационные сети
+116	31	Сбои в предоставлении коммунальных услуг, таких, энергоснабжение, отопление, канализация и т.д.
+117	32	Ошибки ввода, загрузки или обновления данных
+118	32	Несоблюдение сроков и иных обязательств
+119	32	Осуществление некорректных переводов и операций (со стороны клиентов или Банка)
+120	32	Ошибки при ведении бухгалтерского учета и разноса по бух. счетам
+121	32	Нанесение ущерба или утрата активов клиентов или Банка по халатности
+122	32	Срыв сроков поставки
+123	32	Ошибки в управлении залогом и обеспечением по ссудам
+124	32	Сохранность исходных данных
+125	32	Нарушение обязательств по договорам с контрагентами, поставщиками и клиентами
+126	33	Неисполнение обязательств торговыми контрагентами, в том числе непоставка или несвоевременная поставка валюты
+127	33	Разногласия с торговыми контрагентами, в том числе и по уплате штрафных санкций
+128	34	Банкротство подрядчиков
+129	34	Разногласия (неопределенность или согласование штрафных санкций)
+130	34	Неисполнение или несвоевременное обязательств перед Банком
+131	35	Недостаточное или несвоевременное взаимодействие с клиентами с целью блокировки кредитной или дебетовой карты, и т.д.
+132	35	Небрежность в составлении отчетности или несоответствие отчетности минимальным требованиям
+133	35	Небрежность при отправке или несвоевременная отправка соответствующих документов клиентам (напр. Банковские уведомления)
+134	35	Жалобы клиентов на обслуживание 
+135	35	Жалобы клиентов на не предоставление сотрудниками Банка по продуктам и услугам, либо предоставление неверной информации
+136	35	Несвоевременное информирование клиентов о срыве бизнес деятельности и неработоспособности Банка
+137	36	Неподписанная или неправильно заполненная документация
+138	36	Неполные досье клиентов
+139	36	Частично заполненные документы клиентов
+140	36	Отсутствие клиентских поручений/опровержений
+141	36	Неполнота/отсутствие юридических документов
+142	37	Несанкционированный доступ к информации по счетам клиентов (только доступ, без возможности проведения операций)
+143	37	Неправильное отражение данных клиентов, повлекшее убытки 
+144	37	Несоответствующее управление клиентскими данными (персональные данные, платежи, и т.д., повлекшее убытки вследствие выплат по искам
+145	37	Потери или ущерб, нанесенный активам клиента по халатности (требования клиентов)
+146	38	Невыполнение обязательств по предоставлению отчетности
+147	38	Небрежное составление внешней отчетности Регуляторам и Органам надзора
+148	39	Не регламентированы бизнес-процессы
+149	39	Не прописано распределение полномочий и обязанностей сотрудников
+150	39	Не регламентировано взаимодействие подразделений 
+151	39	Неоднозначно прописан функционал и процесс взаимодействия подразделений
+152	39	Двойственная трактовка положений внутрибанковских документов
+153	39	Положения нормативной базы Банка не актуальны или противоречат реальным бизнес-процессам
+154	39	Невозможность получить доступ (найти) к внутрибанковскому нормативному документу
+155	39	Противоречия требований одних документов требованиям других
+156	39	Невозможность получить доступ (найти) к внутрибанковскому нормативному документу
+157	39	Противоречия требований одних документов требованиям других
+161	43	фишинг
+162	43	создание ботов
+163	43	прочее
+158	43	Несанкционированный доступ к информации
+159	43	Похищение учетных данных
+160	43	внедрение вредоносного кода
+164	44	утечки информации не по электронным каналам
+165	44	потеря данных или недоступность данных не в результате нарушения систем защиты
+166	44	внесение и хранение изначально неполной, искаженной или неадекватной информаци
+167	44	недостатки обеспечения качества данных
+168	44	неправомочная эксплуатация банковских информационных ресурсов в личных целях или интересах третьих лиц
+169	44	распространение инсайдером во внешней среде информации, угрожающей репутации Банка
+\.
+
+
+--
+-- TOC entry 2604 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: risk_event_type_examples_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risk_event_type_examples_id_seq', 169, true);
+
+
+--
+-- TOC entry 2490 (class 0 OID 21928)
+-- Dependencies: 229
+-- Data for Name: risk_event_types; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risk_event_types (id, name, short_name, description, e_number) FROM stdin;
+1	Противоправные действия работников банка (внутреннее мошенничество)	Мошенничество работников	Случаи преднамеренной несанкционированной деятельности с участием хотя бы одного аффилированного с Банком лица (включая лиц, работающих на территории Банка). В данную категорию включаются любые сознательные нарушения внутрибанковских нормативных актов.	1
+2	Противоправные действия третьих лиц (внешнее мошенничество)	Мошенничество 	Случаи преднамеренных противоправных действий третьих лиц	2
+3	Кадровая политика и безопасность труда	Кадры	Случаи несоблюдения трудового законодательства и иных внешних и внутренних нормативных актов, касающихся трудовой деятельности; иски (бывших) сотрудников против Банка; несчастные случаи, произошедшие с сотрудниками на территории Банка или при использовании банковского оборудования, а также случаи всех видов дискриминации сотрудников.	3
+4	Клиенты, продукты и практика деловых отношений	Клиенты	Случаи незаконного, несоответствующего или небрежного предоставления банковских услуг, продуктов или исполнения профессиональных обязательств; неадекватной и/или неточной сущности или структуры продуктов, контрактов или информации; инцидентов при обслуживании клиентов в пределах зданий Банка или при использовании банковского оборудования, а также нарушения норм безопасности.	4
+5	Форс-мажорные обстоятельства	Бедствия	Стихийные бедствия, человеческие действия и форс-мажорные обстоятельства, нанесшие ущерб активам Банка (здания, оборудование, человеческие ресурсы, информация, и т.п.), повлекшие за собой срыв бизнес - деятельности полностью либо частично и иные последствия, включая, политические, законодательные и т.д. 	5
+6	Нарушения функционирования и сбои в системах	ИТ-сбои	Случаи неработоспособности любых банковских компьютерных систем, аппаратуры или программного обеспечения (ПО), в том числе по причине логических или структурных несоответствий, телекоммуникационных сбоев, нарушения энергоснабжения и т.д.	6
+7	Организация, исполнение и управление процессами	Процессы	Случаи непреднамеренных ошибок в процессе выполнения, сопровождения или поддержки операций и бизнес-процессов	7
+\.
+
+
+--
+-- TOC entry 2605 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: risk_event_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risk_event_types_id_seq', 7, true);
+
+
+--
+-- TOC entry 2484 (class 0 OID 21835)
+-- Dependencies: 223
+-- Data for Name: risk_events; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risk_events (id, time_reg, time_event, time_approch, time_last_edit, date_close, status, id_division_approch, id_building, id_division_occure, is_risk_realised, id_risk, id_emloyee_approch, id_loss_rank, description, gross_loss, net_loss, calc_loss, waste, compensations, comp_source, correction_measures, prevention_measures, is_commission, is_ib) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2606 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: risk_events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risk_events_id_seq', 1, false);
+
+
+--
+-- TOC entry 2499 (class 0 OID 22001)
+-- Dependencies: 238
+-- Data for Name: risk_levels; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risk_levels (id, name, short_name, description, e_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2607 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: risk_levels_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risk_levels_id_seq', 1, false);
+
+
+--
+-- TOC entry 2497 (class 0 OID 21988)
+-- Dependencies: 236
+-- Data for Name: risk_types; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risk_types (id, name, short_name, description, e_number) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2608 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: risk_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risk_types_id_seq', 1, false);
+
+
+--
+-- TOC entry 2488 (class 0 OID 21914)
+-- Dependencies: 227
+-- Data for Name: risks; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY risks (id, name, short_name, id_type, id_level, id_loss_rank, loss_description, id_account_div, id_account_employee, date_create, date_last_edit, id_employee_identify, id_user_create) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2609 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: risks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('risks_id_seq', 1, false);
+
+
+--
+-- TOC entry 2462 (class 0 OID 21358)
+-- Dependencies: 201
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY roles (id, role_name, description) FROM stdin;
+1	developer	Разработка
+\.
+
+
+--
+-- TOC entry 2610 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('roles_id_seq', 1, true);
+
+
+--
+-- TOC entry 2478 (class 0 OID 21754)
+-- Dependencies: 217
+-- Data for Name: sub_activities; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY sub_activities (id, id_activity, name, short_name, description, e_number) FROM stdin;
+1	1	Предоставление кредитов (займов) и привлечение денежных средств во вклады	Предоставление кредитов (займов) и привлечение средств во вклады	Предоставление кредитов (займов) и привлечение денежных средств во вклады	1.1
+2	1	Открытие и ведение банковских счетов физических лиц, осуществление платежей по поручению физических лиц	Открытие и ведение банковских счетов физических лиц	Открытие и ведение банковских счетов физических лиц, осуществление платежей по поручению физических лиц	1.2
+3	1	Доверительное управление денежными средствами и (или) ценными бумагами	Доверительное управление 	Доверительное управление денежными средствами и (или) ценными бумагами	1.3
+4	1	Предоставление консультаций по вопросам инвестирования	Предоставление консультаций 	Предоставление консультаций по вопросам инвестирования	1.4
+5	1	Обслуживание банковских карт, кассовое обслуживание	Обслуживание банковских карт, кассовое обслуживание	Обслуживание банковских карт, кассовое обслуживание	1.5
+6	1	Предоставление других услуг	Предоставление других услуг 	Предоставление других услуг	1.6
+7	2	Предоставление кредитов (займов) и привлечение депозитов	Предоставление кредитов (займов) и привлечение депозитов	Предоставление кредитов (займов) и привлечение депозитов	2.1
+8	2	Открытие и ведение банковских счетов юридических лиц, осуществление платежей по поручению юридических лиц	Открытие и ведение банковских счетов юридических лиц	Открытие и ведение банковских счетов юридических лиц, осуществление платежей по поручению юридических лиц	2.2
+9	2	Операции с векселями	Операции с векселями	Операции с векселями	2.3
+10	2	Выдача банковских гарантий и поручительств	Выдача банковских гарантий и поручительств	Выдача банковских гарантий и поручительств	2.4
+11	2	Факторинговые, форфейтинговые операции	Факторинговые, форфейтинговые операции	Факторинговые, форфейтинговые операции	2.5
+12	2	Лизинговые операции	Лизинговые операции	Лизинговые операции	2.6
+13	2	Кассовое обслуживание, инкассация	Кассовое обслуживание, инкассация	Кассовое обслуживание, инкассация	2.7
+14	2	Оказание консультационных, информационных услуг	Оказание консультационных, информационных услуг	Оказание консультационных, информационных услуг	2.8
+15	2	Предоставление других услуг             	Предоставление других услуг             	Предоставление других услуг             	2.9
+16	3	Осуществление расчетов на   нетто-основе, клиринг	Осуществление расчетов на   нетто-основе, клиринг	Осуществление расчетов на   нетто-основе, клиринг	3.1
+17	3	Осуществление валовых расчетов	Осуществление валовых расчетов	Осуществление валовых расчетов	3.2
+18	3	Инкассовые операции                     	Инкассовые операции                     	Инкассовые операции                     	3.3
+19	4	Доверительное хранение документов, ценных бумаг, депозитарных расписок, денежных средств и иного имущества, ведение "эскроу" ("escrow") счетов	Доверительное хранение, ведение "эскроу" счетов	Доверительное хранение документов, ценных бумаг, депозитарных расписок, денежных средств и иного имущества, ведение "эскроу" ("escrow") счетов	4.1
+20	4	Осуществление агентских функций для эмитентов и функций платежного агента 	Осуществление агентских функций 	Осуществление агентских функций для эмитентов и функций платежного агента 	4.2
+21	5	Приобретение ценных бумаг с целью получения инвестиционного дохода или с целью получения дохода от их реализации (перепродажи)	Приобретение ценных бумаг с целью получения инвестиционного дохода 	Приобретение ценных бумаг с целью получения инвестиционного дохода или с целью получения дохода от их реализации (перепродажи)	5.1
+22	5	Срочные сделки с ценными бумагами, иностранной валютой, драгоценными металлами, деривативами	Срочные сделки 	Срочные сделки с ценными бумагами, иностранной валютой, драгоценными металлами, деривативами	5.2
+23	5	Выполнение функций маркет-мейкера	Маркет-мейкер	Выполнение функций маркет-мейкера	5.3
+24	5	Позиции, открываемые за счет  собственных средств	Позиции, открываемые за счет  собственных средств	Позиции, открываемые за счет  собственных средств	5.4
+25	5	Операции РЕПО       	Операции РЕПО       	Операции РЕПО       	5.5
+26	5	Другие операции                         	Другие операции                         	Другие операции                         	5.6
+27	6	Первичное размещение эмиссионных ценных бумаг (в том числе гарантированное размещение ценных бумаг)	Первичное размещение 	Первичное размещение эмиссионных ценных бумаг (в том числе гарантированное размещение ценных бумаг)	6.1
+28	6	Оказание банковских услуг при слиянии, поглощении или приватизации юридических лиц	Слиянии, поглощении 	Оказание банковских услуг при слиянии, поглощении или приватизации юридических лиц	6.2
+29	6	Секьюритизация	Секьюритизация	Секьюритизация	6.3
+30	6	Исследования рынков	Исследования рынков	Исследования рынков	6.4
+31	6	Инвестиционный консалтинг               	Инвестиционный консалтинг               	Инвестиционный консалтинг               	6.5
+32	7	Доверительное управление фондами (ценные бумаги, денежные средства и другое имущество, переданное в доверительное управление разными лицами и  объединенное на праве общей собственности, а также приобретенное в рамках договора доверительного управления)  	Доверительное управление 	Доверительное управление фондами (ценные бумаги, денежные средства и другое имущество, переданное в доверительное управление разными лицами и  объединенное на праве общей собственности, а также приобретенное в рамках договора доверительного управления)  	7.1
+33	8	Различные брокерские услуги (в том числе розничные) 	Брокерские услуги 	Различные брокерские услуги (в том числе розничные) 	8/1
+\.
+
+
+--
+-- TOC entry 2611 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: sub_activities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('sub_activities_id_seq', 33, true);
+
+
+--
+-- TOC entry 2467 (class 0 OID 21434)
+-- Dependencies: 206
+-- Data for Name: sub_factors; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY sub_factors (id, id_factor, name, short_name, description, e_number) FROM stdin;
+1	1	Инжиниринг	Инжиниринг	Инжиниринг	1.1
+2	1	Управленческие решения	Управленческие решения	Управленческие решения	1.2
+3	1	Правовое обеспечение деятельности	Правовое обеспечение деятельности	Правовое обеспечение деятельности	1.3
+4	1	Регуляторные требования	Регуляторные требования	Регуляторные требования	1.4
+5	1	Взаимозависимость	Взаимозависимость	Взаимозависимость	1.5
+6	1	Объемы	Объемы	Объемы	1.6
+7	1	Контроль	Контроль	Контроль	1.7
+8	1	Регламентация	Регламентация	Регламентация	1.8
+9	1	Структура	Структура	Структура	1.9
+10	1	Информация	Информация	Информация	1.10
+11	1	Информационная безопасность	Информационная безопасность	Информационная безопасность	1.11
+12	1	Прочие риски, связанные с организацией бизнеса	Прочие риски, связанные с организацией бизнеса	Прочие риски, связанные с организацией бизнеса	1.12
+13	2	Компетентность	Компетентность	Компетентность	2.1
+14	2	Эффективность	Эффективность	Эффективность	2.2
+15	2	Ключевой сотрудник                                                                                                                                                    	Ключевой сотрудник                                                                                                                                                    	Ключевой сотрудник                                                                                                                                                    	2.3
+16	2	Лояльность	Лояльность	Лояльность	2.4
+17	3	Загруженность	Загруженность	Загруженность	3.1
+18	3	Зависимость	Зависимость	Зависимость	3.2
+20	4	Действия третьих лиц	Действия третьих лиц	Действия третьих лиц	4.1
+21	4	Форс-мажор	Форс-мажор	Форс-мажор	4.2
+22	4	Внешняя среда	Внешняя среда	Внешняя среда	4.3
+19	3	Работоспособность систем	Работоспособность	Работоспособность	3.3
+\.
+
+
+--
+-- TOC entry 2612 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: sub_factors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('sub_factors_id_seq', 22, true);
+
+
+--
+-- TOC entry 2460 (class 0 OID 21339)
+-- Dependencies: 199
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: riskman
+--
+
+COPY users (id, login, password, time_create, time_edit, id_employee, enabled) FROM stdin;
+1	pauls	1111	\N	\N	1	t
+\.
+
+
+--
+-- TOC entry 2613 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: riskman
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1, true);
+
+
+--
+-- TOC entry 2249 (class 2606 OID 21622)
+-- Name: activities pk_activities_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY activities
+    ADD CONSTRAINT pk_activities_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2217 (class 2606 OID 21239)
+-- Name: buildings pk_buildings_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY buildings
+    ADD CONSTRAINT pk_buildings_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2219 (class 2606 OID 21296)
+-- Name: business_process pk_business_process_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY business_process
+    ADD CONSTRAINT pk_business_process_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2221 (class 2606 OID 21298)
+-- Name: divisions pk_devision_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY divisions
+    ADD CONSTRAINT pk_devision_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2223 (class 2606 OID 21300)
+-- Name: emails pk_emails; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY emails
+    ADD CONSTRAINT pk_emails PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2227 (class 2606 OID 21302)
+-- Name: employees pk_employee_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY employees
+    ADD CONSTRAINT pk_employee_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2225 (class 2606 OID 21304)
+-- Name: employee_appointment pk_eployee_appointment; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY employee_appointment
+    ADD CONSTRAINT pk_eployee_appointment PRIMARY KEY (id_employee, id_position, id_division, date_app);
+
+
+--
+-- TOC entry 2247 (class 2606 OID 21457)
+-- Name: factor_examples pk_factors_example_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY factor_examples
+    ADD CONSTRAINT pk_factors_example_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2239 (class 2606 OID 21420)
+-- Name: factors pk_factors_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY factors
+    ADD CONSTRAINT pk_factors_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2261 (class 2606 OID 21728)
+-- Name: loss_rank_values pk_loss_rank_values; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_rank_values
+    ADD CONSTRAINT pk_loss_rank_values PRIMARY KEY (id_rank, date_set, value_type);
+
+
+--
+-- TOC entry 2257 (class 2606 OID 21721)
+-- Name: loss_ranks pk_loss_ranks_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_ranks
+    ADD CONSTRAINT pk_loss_ranks_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2267 (class 2606 OID 21780)
+-- Name: loss_sub_types pk_loss_sub_type_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_sub_types
+    ADD CONSTRAINT pk_loss_sub_type_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2253 (class 2606 OID 21652)
+-- Name: loss_types pk_loss_types_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_types
+    ADD CONSTRAINT pk_loss_types_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2271 (class 2606 OID 21796)
+-- Name: phones pk_phones; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY phones
+    ADD CONSTRAINT pk_phones PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2229 (class 2606 OID 21308)
+-- Name: positions pk_position_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY positions
+    ADD CONSTRAINT pk_position_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2277 (class 2606 OID 21901)
+-- Name: r_events_activities pk_r_events_activity; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_activities
+    ADD CONSTRAINT pk_r_events_activity PRIMARY KEY (id_event, id_sub_activity);
+
+
+--
+-- TOC entry 2275 (class 2606 OID 21848)
+-- Name: r_events_factors pk_r_events_factors; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_factors
+    ADD CONSTRAINT pk_r_events_factors PRIMARY KEY (id_event, id_sub_factor);
+
+
+--
+-- TOC entry 2301 (class 2606 OID 22196)
+-- Name: r_events_losses pk_r_events_losses; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_losses
+    ADD CONSTRAINT pk_r_events_losses PRIMARY KEY (id_event, id_loss_sub_type);
+
+
+--
+-- TOC entry 2291 (class 2606 OID 21974)
+-- Name: r_events_risk_event_types pk_r_events_types; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_risk_event_types
+    ADD CONSTRAINT pk_r_events_types PRIMARY KEY (id_event, id_event_sub_type);
+
+
+--
+-- TOC entry 2285 (class 2606 OID 21949)
+-- Name: risk_event_sub_types pk_risk_event_sub_types_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_sub_types
+    ADD CONSTRAINT pk_risk_event_sub_types_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2289 (class 2606 OID 21964)
+-- Name: risk_event_type_examples pk_risk_event_type_example_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_type_examples
+    ADD CONSTRAINT pk_risk_event_type_example_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2281 (class 2606 OID 21936)
+-- Name: risk_event_types pk_risk_event_types_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_types
+    ADD CONSTRAINT pk_risk_event_types_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2273 (class 2606 OID 21843)
+-- Name: risk_events pk_risk_events_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_events
+    ADD CONSTRAINT pk_risk_events_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2279 (class 2606 OID 21922)
+-- Name: risks pk_risk_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risks
+    ADD CONSTRAINT pk_risk_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2297 (class 2606 OID 22009)
+-- Name: risk_levels pk_risk_levels_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_levels
+    ADD CONSTRAINT pk_risk_levels_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2293 (class 2606 OID 21996)
+-- Name: risk_types pk_risk_types_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_types
+    ADD CONSTRAINT pk_risk_types_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2235 (class 2606 OID 21366)
+-- Name: roles pk_role_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY roles
+    ADD CONSTRAINT pk_role_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2263 (class 2606 OID 21762)
+-- Name: sub_activities pk_sub_activity_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_activities
+    ADD CONSTRAINT pk_sub_activity_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2243 (class 2606 OID 21442)
+-- Name: sub_factors pk_sub_factors_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_factors
+    ADD CONSTRAINT pk_sub_factors_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2231 (class 2606 OID 21348)
+-- Name: users pk_users_id; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_users_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2237 (class 2606 OID 21386)
+-- Name: r_user_roles r_user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_user_roles
+    ADD CONSTRAINT r_user_roles_pkey PRIMARY KEY (id_user, id_role);
+
+
+--
+-- TOC entry 2251 (class 2606 OID 21624)
+-- Name: activities uk_activities_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY activities
+    ADD CONSTRAINT uk_activities_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2241 (class 2606 OID 22058)
+-- Name: factors uk_factors_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY factors
+    ADD CONSTRAINT uk_factors_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2259 (class 2606 OID 21723)
+-- Name: loss_ranks uk_loss_ranks_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_ranks
+    ADD CONSTRAINT uk_loss_ranks_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2269 (class 2606 OID 21782)
+-- Name: loss_sub_types uk_loss_sub_types_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_sub_types
+    ADD CONSTRAINT uk_loss_sub_types_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2255 (class 2606 OID 21654)
+-- Name: loss_types uk_loss_types_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_types
+    ADD CONSTRAINT uk_loss_types_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2287 (class 2606 OID 22048)
+-- Name: risk_event_sub_types uk_risk_event_sub_type_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_sub_types
+    ADD CONSTRAINT uk_risk_event_sub_type_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2283 (class 2606 OID 22035)
+-- Name: risk_event_types uk_risk_event_types_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_types
+    ADD CONSTRAINT uk_risk_event_types_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2299 (class 2606 OID 22011)
+-- Name: risk_levels uk_risk_levels_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_levels
+    ADD CONSTRAINT uk_risk_levels_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2295 (class 2606 OID 21998)
+-- Name: risk_types uk_risk_types_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_types
+    ADD CONSTRAINT uk_risk_types_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2265 (class 2606 OID 22081)
+-- Name: sub_activities uk_sub_activitiy_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_activities
+    ADD CONSTRAINT uk_sub_activitiy_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2245 (class 2606 OID 22071)
+-- Name: sub_factors uk_sub_factors_number; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_factors
+    ADD CONSTRAINT uk_sub_factors_number UNIQUE (e_number);
+
+
+--
+-- TOC entry 2233 (class 2606 OID 21350)
+-- Name: users uk_user_logins; Type: CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT uk_user_logins UNIQUE (login);
+
+
+--
+-- TOC entry 2303 (class 2606 OID 21309)
+-- Name: employee_appointment fk_appointment_devision; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY employee_appointment
+    ADD CONSTRAINT fk_appointment_devision FOREIGN KEY (id_division) REFERENCES divisions(id);
+
+
+--
+-- TOC entry 2304 (class 2606 OID 21314)
+-- Name: employee_appointment fk_appointment_eployee; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY employee_appointment
+    ADD CONSTRAINT fk_appointment_eployee FOREIGN KEY (id_employee) REFERENCES employees(id);
+
+
+--
+-- TOC entry 2305 (class 2606 OID 21319)
+-- Name: employee_appointment fk_appointment_position; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY employee_appointment
+    ADD CONSTRAINT fk_appointment_position FOREIGN KEY (id_position) REFERENCES positions(id);
+
+
+--
+-- TOC entry 2302 (class 2606 OID 21324)
+-- Name: emails fk_employee_email; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY emails
+    ADD CONSTRAINT fk_employee_email FOREIGN KEY (id_employee) REFERENCES employees(id);
+
+
+--
+-- TOC entry 2314 (class 2606 OID 21797)
+-- Name: phones fk_employee_phone; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY phones
+    ADD CONSTRAINT fk_employee_phone FOREIGN KEY (id_employee) REFERENCES employees(id);
+
+
+--
+-- TOC entry 2310 (class 2606 OID 21458)
+-- Name: factor_examples fk_factors_example_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY factor_examples
+    ADD CONSTRAINT fk_factors_example_id FOREIGN KEY (id_sub_factor) REFERENCES sub_factors(id);
+
+
+--
+-- TOC entry 2311 (class 2606 OID 21729)
+-- Name: loss_rank_values fk_loss_sub_ranks_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_rank_values
+    ADD CONSTRAINT fk_loss_sub_ranks_id FOREIGN KEY (id_rank) REFERENCES loss_ranks(id);
+
+
+--
+-- TOC entry 2313 (class 2606 OID 21783)
+-- Name: loss_sub_types fk_loss_sub_type_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY loss_sub_types
+    ADD CONSTRAINT fk_loss_sub_type_id FOREIGN KEY (id_loss) REFERENCES loss_types(id);
+
+
+--
+-- TOC entry 2326 (class 2606 OID 21980)
+-- Name: r_events_risk_event_types fk_r_event_sub_types; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_risk_event_types
+    ADD CONSTRAINT fk_r_event_sub_types FOREIGN KEY (id_event_sub_type) REFERENCES risk_event_sub_types(id);
+
+
+--
+-- TOC entry 2315 (class 2606 OID 21849)
+-- Name: r_events_factors fk_r_events; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_factors
+    ADD CONSTRAINT fk_r_events FOREIGN KEY (id_event) REFERENCES risk_events(id);
+
+
+--
+-- TOC entry 2317 (class 2606 OID 21902)
+-- Name: r_events_activities fk_r_events_activity; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_activities
+    ADD CONSTRAINT fk_r_events_activity FOREIGN KEY (id_event) REFERENCES risk_events(id);
+
+
+--
+-- TOC entry 2327 (class 2606 OID 22197)
+-- Name: r_events_losses fk_r_events_losses_events; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_losses
+    ADD CONSTRAINT fk_r_events_losses_events FOREIGN KEY (id_event) REFERENCES risk_events(id);
+
+
+--
+-- TOC entry 2328 (class 2606 OID 22202)
+-- Name: r_events_losses fk_r_events_sub_losses; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_losses
+    ADD CONSTRAINT fk_r_events_sub_losses FOREIGN KEY (id_loss_sub_type) REFERENCES loss_sub_types(id);
+
+
+--
+-- TOC entry 2325 (class 2606 OID 21975)
+-- Name: r_events_risk_event_types fk_r_events_types; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_risk_event_types
+    ADD CONSTRAINT fk_r_events_types FOREIGN KEY (id_event) REFERENCES risk_events(id);
+
+
+--
+-- TOC entry 2318 (class 2606 OID 21907)
+-- Name: r_events_activities fk_r_sub_activities; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_activities
+    ADD CONSTRAINT fk_r_sub_activities FOREIGN KEY (id_sub_activity) REFERENCES sub_activities(id);
+
+
+--
+-- TOC entry 2324 (class 2606 OID 21965)
+-- Name: risk_event_type_examples fk_risk_enent_type_example_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_type_examples
+    ADD CONSTRAINT fk_risk_enent_type_example_id FOREIGN KEY (id_event_sub_type) REFERENCES risk_event_sub_types(id);
+
+
+--
+-- TOC entry 2323 (class 2606 OID 21952)
+-- Name: risk_event_sub_types fk_risk_event_sub_types_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risk_event_sub_types
+    ADD CONSTRAINT fk_risk_event_sub_types_id FOREIGN KEY (id_type) REFERENCES risk_event_types(id);
+
+
+--
+-- TOC entry 2320 (class 2606 OID 22029)
+-- Name: risks fk_risks_account_devision; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risks
+    ADD CONSTRAINT fk_risks_account_devision FOREIGN KEY (id_account_div) REFERENCES divisions(id);
+
+
+--
+-- TOC entry 2319 (class 2606 OID 22024)
+-- Name: risks fk_risks_account_employee; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risks
+    ADD CONSTRAINT fk_risks_account_employee FOREIGN KEY (id_account_employee) REFERENCES employees(id);
+
+
+--
+-- TOC entry 2321 (class 2606 OID 22014)
+-- Name: risks fk_risks_risk_levels; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risks
+    ADD CONSTRAINT fk_risks_risk_levels FOREIGN KEY (id_level) REFERENCES risk_levels(id);
+
+
+--
+-- TOC entry 2322 (class 2606 OID 22019)
+-- Name: risks fk_risks_risk_types; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY risks
+    ADD CONSTRAINT fk_risks_risk_types FOREIGN KEY (id_type) REFERENCES risk_types(id);
+
+
+--
+-- TOC entry 2307 (class 2606 OID 21387)
+-- Name: r_user_roles fk_roles; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_user_roles
+    ADD CONSTRAINT fk_roles FOREIGN KEY (id_role) REFERENCES roles(id);
+
+
+--
+-- TOC entry 2312 (class 2606 OID 21765)
+-- Name: sub_activities fk_sub_activity_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_activities
+    ADD CONSTRAINT fk_sub_activity_id FOREIGN KEY (id_activity) REFERENCES activities(id);
+
+
+--
+-- TOC entry 2309 (class 2606 OID 21445)
+-- Name: sub_factors fk_sub_factors_id; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY sub_factors
+    ADD CONSTRAINT fk_sub_factors_id FOREIGN KEY (id_factor) REFERENCES factors(id);
+
+
+--
+-- TOC entry 2308 (class 2606 OID 21392)
+-- Name: r_user_roles fk_users; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_user_roles
+    ADD CONSTRAINT fk_users FOREIGN KEY (id_user) REFERENCES users(id);
+
+
+--
+-- TOC entry 2306 (class 2606 OID 21351)
+-- Name: users fk_users_employee; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT fk_users_employee FOREIGN KEY (id_employee) REFERENCES employees(id);
+
+
+--
+-- TOC entry 2316 (class 2606 OID 21854)
+-- Name: r_events_factors fr_r_sub_factors; Type: FK CONSTRAINT; Schema: public; Owner: riskman
+--
+
+ALTER TABLE ONLY r_events_factors
+    ADD CONSTRAINT fr_r_sub_factors FOREIGN KEY (id_sub_factor) REFERENCES sub_factors(id);
+
+
+-- Completed on 2017-10-27 16:51:52
+
+--
+-- PostgreSQL database dump complete
+--
+
