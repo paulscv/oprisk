@@ -1,18 +1,16 @@
 package scv.paul.opriskback.validator.user;
 
-import io.khasang.moika.entity.User;
-import io.khasang.moika.service.UserService;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import scv.paul.opriskback.entity.User;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-//import io.khasang.moika.entity.User_;
 
 /**
  * Валидатор уникальности Email данного пользователя.
@@ -25,8 +23,9 @@ public class UserLoginUniqueValidator implements ConstraintValidator<UserLoginUn
     @Autowired
     SessionFactory sessionFactory;
 
-    @Autowired
-    UserService userService;
+ // раскоментить после гтовности сервиса
+ //   @Autowired
+ //   UserService userService;
 
     public UserLoginUniqueValidator() {
         System.out.println("UserEmailUniqueValidator!!!");
@@ -53,7 +52,7 @@ public class UserLoginUniqueValidator implements ConstraintValidator<UserLoginUn
             return true;
         }
 
-        boolean isValid = !userService.isLoginUsed(user.getLogin(), user);
+        boolean isValid = true; //!userService.isLoginUsed(user.getLogin(), user);
 
         if (!isValid) {
             constraintContext.disableDefaultConstraintViolation();
